@@ -1,0 +1,30 @@
+{% extends "events/base.html" %}
+
+{% block title %}Домашняя страница{% endblock %}
+
+{% block content %}
+    <div class="card border-secondary mt-3 mb-3 mx-auto" style="max-width: 99%;">
+      <div class="card-body">
+        <h5 class="card-title">Информация о пользователе</h5>
+        <p class="card-text"> Имя пользователя - {{ user.username }} </p>
+        <p class="card-text"> Email пользователя - {{ user.email }}</p>
+      </div>
+    </div>
+
+    <div class="card border-secondary mt-3 mb-3 mx-auto" style="max-width: 99%;">
+      <div class="card-body">
+          <p class="card-text">История поиска событий</p>
+    {% for search_record in search_records %}
+
+    <div class="card border-secondary mt-3 mb-3 mx-auto" style="max-width: 99%;">
+      <div class="card-body">
+        <p class="card-text">
+          город: {{ search_record.city }}, тема: {{ search_record.topic }}, с: {{ search_record.start_interval }}, по: {{ search_record.end_interval }}
+        </p>
+              <a href="{% url 'events:repeat_search_request'  search_record.id %}" class="btn btn-primary">Повторить запрос</a>
+      </div>
+    </div>
+    {% endfor %}
+      </div>
+    </div>
+{% endblock %}

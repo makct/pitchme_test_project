@@ -1,0 +1,13 @@
+{% extends "events/base.html" %}
+
+{% block title %}Регистрация нового пользователя{% endblock %}
+
+{% block content %}
+    <form method="POST" class="form-group">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <button type="submit" class="btn btn-success">Register</button>
+    </form>
+{% endblock %}
+
+

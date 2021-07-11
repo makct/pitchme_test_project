@@ -1,0 +1,38 @@
+{% extends "events/base.html" %}
+
+{% block title %}Результат поиска по событиям{% endblock %}
+
+{% block content %}
+    <div class="card border-light mx-auto" style="max-width: 99%;">
+      <div class="card-body">
+          <h2>Список подходящих событий  <span class="badge badge-secondary">Не пропусти!</span></h2>
+      </div>
+    </div>
+    {%  if events %}
+    {% for event in events %}
+
+    <div class="card border-secondary mt-3 mb-3 mx-auto" style="max-width: 99%;">
+      <h5 class="card-header">{{event.city}}</h5>
+      <div class="card-body">
+        <h5 class="card-title">{{event.short_descr}}</h5>
+        <p class="card-text"> {{event.full_descr}} </p>
+        <p class="card-text">
+          {% for topic in event.eventtopics_set.all %}
+             <span class="badge badge-primary"> {{ topic.topic.name }}</span>
+          {% endfor %}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+    {% else %}
+        <div class="alert alert-primary mx-auto" role="alert" style="max-width: 99%;">
+            Нет подходящих событий ;(
+        </div>
+    {% endif %}
+    <div class="card border-secondary mt-3 mb-3 mx-auto" style="max-width: 99%;">
+      <h5 class="card-header"> Текущие параметры поиска </h5>
+      <div class="card-body">
+        <p class="card-text"> {{ search_params }} </p>
+      </div>
+    </div>
+{% endblock %}

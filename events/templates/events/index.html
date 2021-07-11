@@ -1,0 +1,26 @@
+{% extends "events/base.html" %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+    <div class="card border-light mx-auto" style="max-width: 99%;">
+      <div class="card-body">
+          <h2>Список текущих событий  <span class="badge badge-secondary">Не пропусти!</span></h2>
+      </div>
+    </div>
+    {% for event in events %}
+
+    <div class="card border-secondary mt-3 mb-3 mx-auto" style="max-width: 99%;">
+      <h5 class="card-header">{{event.city}}</h5>
+      <div class="card-body">
+        <h5 class="card-title">{{event.short_descr}}</h5>
+        <p class="card-text"> {{event.full_descr}} </p>
+        <p class="card-text">
+          {% for topic in event.eventtopics_set.all %}
+             <span class="badge badge-primary"> {{ topic.topic.name }}</span>
+          {% endfor %}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+{% endblock %}
