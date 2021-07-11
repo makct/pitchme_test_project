@@ -1,10 +1,11 @@
+from dataclasses import asdict
+
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, redirect, render
 from django.urls import reverse
-import json
+
 from .dataclasses import SearchParams
-from dataclasses import asdict
 from .forms import LoginForm, RegisterForm, SearchForm
 from .models import Event, UserSearchHistory
 
@@ -54,30 +55,47 @@ def user_logout(request: HttpRequest) -> HttpResponse:
 
 def home_page(request) -> HttpResponse:
     if request.user.is_authenticated:
-        search_records = UserSearchHistory.objects.filter(username=request.user.username)
-        return render(request, "events/homepage.html", {"search_records": search_records})
+        search_records = UserSearchHistory.objects.filter(
+            username=request.user.username
+        )
+        return render(
+            request, "events/homepage.html", {"search_records": search_records}
+        )
 
     return HttpResponseRedirect(reverse("events:login"))
 
 
-def search_result(request: HttpRequest, search_params: SearchParams = None) -> HttpResponse:
+def search_result(
+    request: HttpRequest, search_params: SearchParams = None
+) -> HttpResponse:
     matched_events = []
 
     if search_params:
-        events_filtered_by_city = Event.objects.filter(city__name__exact=search_params.city)
+        events_filtered_by_city = Event.objects.filter(
+            city__name__exact=search_params.city
+        )
         matched_events = events_filtered_by_city.filter(
             eventtopic__topic__name__exact=search_params.topic
         )
         if search_params.start_interval and search_params.end_interval:
             matched_events = matched_events.filter(
-                start_date__range=[search_params.start_interval, search_params.end_interval]
+                start_date__range=[
+                    search_params.start_interval,
+                    search_params.end_interval,
+                ]
             )
         # if start_date:
         #     matched_events = matched_events.filter(start_date__gte=start_date)
         # if end_date:
         #     matched_events = matched_events.filter(end_date__lte=end_date)
 
-    history_record = UserSearchHistory(username=request.user.username, city=search_params.city, start_interval=search_params.start_interval, end_interval=search_params.end_interval, topic=search_params.topic)
+    history_record = UserSearchHistory(
+        username=request.user.username,
+        city=search_params.city,
+        start_interval=search_params.start_interval,
+        end_interval=search_params.end_interval,
+        topic=search_params.topic,
+    )
     history_record.save()
 
     return render(
@@ -92,7 +110,12 @@ def search(request: HttpRequest) -> HttpResponse:
         form = SearchForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            search_params = SearchParams(city=data["city"], start_interval=data["start_interval"], end_interval=data["end_interval"], topic=data["topic"])
+            search_params = SearchParams(
+                city=data["city"],
+                start_interval=data["start_interval"],
+                end_interval=data["end_interval"],
+                topic=data["topic"],
+            )
             return search_result(request, search_params)
     else:
         form = SearchForm()
@@ -102,6 +125,10 @@ def search(request: HttpRequest) -> HttpResponse:
 
 def repeat_search_request(request: HttpRequest, history_log_id: int):
     log_record = UserSearchHistory.objects.get(id=history_log_id)
-    search_params = SearchParams(city=log_record.city, start_interval=log_record.start_interval, end_interval=log_record.end_interval, topic=log_record.topic)
+    search_params = SearchParams(
+        city=log_record.city,
+        start_interval=log_record.start_interval,
+        end_interval=log_record.end_interval,
+        topic=log_record.topic,
+    )
     return search_result(request, search_params)
-
