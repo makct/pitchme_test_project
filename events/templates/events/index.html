@@ -16,7 +16,7 @@
         <h5 class="card-title">{{event.short_descr}}</h5>
         <p class="card-text"> {{event.full_descr}} </p>
         <p class="card-text">
-          {% for topic in event.eventtopics_set.all %}
+          {% for topic in event.eventtopic_set.all %}
              <span class="badge badge-primary"> {{ topic.topic.name }}</span>
           {% endfor %}
         </p>
