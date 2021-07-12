@@ -26,7 +26,7 @@ class SearchForm(forms.Form):
         widget=forms.widgets.DateInput(attrs={"type": "date"}),
         required=False,
     )
-    end_interval= forms.DateField(
+    end_interval = forms.DateField(
         label="Конец интервала",
         widget=forms.widgets.DateInput(attrs={"type": "date"}),
         required=False,

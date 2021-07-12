@@ -84,10 +84,6 @@ def search_result(
                     search_params.end_interval,
                 ]
             )
-        # if start_date:
-        #     matched_events = matched_events.filter(start_date__gte=start_date)
-        # if end_date:
-        #     matched_events = matched_events.filter(end_date__lte=end_date)
 
     history_record = UserSearchHistory(
         username=request.user.username,
